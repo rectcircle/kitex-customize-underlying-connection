@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/apache/thrift v0.13.0
 	github.com/cloudwego/kitex v0.4.5-0.20230213035731-7054d09a7d3a
+	github.com/hashicorp/yamux v0.1.1
 	nhooyr.io/websocket v1.8.7
 )
 
