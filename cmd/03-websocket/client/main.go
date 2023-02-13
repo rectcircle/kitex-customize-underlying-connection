@@ -12,7 +12,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/remote/trans/gonet"
 	"github.com/rectcircle/kitex-customize-underlying-connection/kitex_gen/api"
 	"github.com/rectcircle/kitex-customize-underlying-connection/kitex_gen/api/echo"
-	"golang.org/x/net/websocket"
+	"nhooyr.io/websocket"
 )
 
 type WebsocketKitexDialer struct {
@@ -27,11 +27,13 @@ func NewWebsocketKitexDialer(serverURL string) remote.Dialer {
 
 // DialTimeout implements remote.Dialer
 func (d *WebsocketKitexDialer) DialTimeout(network string, address string, timeout time.Duration) (net.Conn, error) {
-	cfg, err := websocket.NewConfig(d.ServerURL, d.ServerURL)
+	wsConn, _, err := websocket.Dial(context.Background(), d.ServerURL, &websocket.DialOptions{
+		CompressionMode: websocket.CompressionDisabled, // 默认压缩模式有概率触发 panic，禁用之。
+	})
 	if err != nil {
 		return nil, err
 	}
-	return websocket.DialConfig(cfg)
+	return websocket.NetConn(context.Background(), wsConn, websocket.MessageBinary), nil
 }
 
 func main() {

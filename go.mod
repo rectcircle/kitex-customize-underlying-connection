@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/apache/thrift v0.13.0
 	github.com/cloudwego/kitex v0.4.5-0.20230213035731-7054d09a7d3a
-	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
+	nhooyr.io/websocket v1.8.7
 )
 
 require (
@@ -20,6 +20,7 @@ require (
 	github.com/google/pprof v0.0.0-20220608213341-c488b8fa1db3 // indirect
 	github.com/jhump/protoreflect v1.8.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/klauspost/compress v1.10.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/oleiade/lane v1.0.1 // indirect
@@ -27,6 +28,7 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	golang.org/x/arch v0.0.0-20220722155209-00200b7164a7 // indirect
+	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220817070843-5a390386f1f2 // indirect
 	golang.org/x/text v0.3.6 // indirect

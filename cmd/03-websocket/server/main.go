@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	api "github.com/rectcircle/kitex-customize-underlying-connection/kitex_gen/api/echo"
 	serverImpl "github.com/rectcircle/kitex-customize-underlying-connection/server"
-	"golang.org/x/net/websocket"
+	"nhooyr.io/websocket"
 )
 
 type WebsocketAddr struct {
@@ -94,15 +95,21 @@ func (s *WebsocketKitexServer) Close() error {
 	return s.server.Close()
 }
 
-func (s *WebsocketKitexServer) websocketHandle(wsConn *websocket.Conn) {
-	c := NewClosedConnWrapper(wsConn)
+func (s *WebsocketKitexServer) websocketHandle(w http.ResponseWriter, r *http.Request) {
+	wsConn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+		CompressionMode: websocket.CompressionDisabled, // 默认压缩模式有概率触发 panic，禁用之。
+	})
+	if err != nil {
+		log.Printf("accept websocket conn error: %v", err)
+	}
+	c := NewClosedConnWrapper(websocket.NetConn(context.Background(), wsConn, websocket.MessageBinary))
 	s.connChan <- c
 	<-c.CloseChan()
 }
 
 func (s *WebsocketKitexServer) Start() error {
 	mux := http.NewServeMux()
-	mux.Handle(s.addr.URL.Path, websocket.Handler(s.websocketHandle))
+	mux.Handle(s.addr.URL.Path, http.HandlerFunc(s.websocketHandle))
 
 	server := &http.Server{Addr: s.addr.URL.Host, Handler: mux}
 	go server.ListenAndServe() // nolint
