@@ -101,6 +101,7 @@ func (s *WebsocketKitexServer) websocketHandle(w http.ResponseWriter, r *http.Re
 	})
 	if err != nil {
 		log.Printf("accept websocket conn error: %v", err)
+		return
 	}
 	c := NewClosedConnWrapper(websocket.NetConn(context.Background(), wsConn, websocket.MessageBinary))
 	s.connChan <- c
